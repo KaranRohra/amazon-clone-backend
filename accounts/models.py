@@ -19,8 +19,14 @@ class Address(models.Model):
     address_line = models.TextField()
     pincode = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.user} __ {self.country} __ {self.state}"
+
 
 class Phone(models.Model):
     address = models.OneToOneField(Address, on_delete=models.CASCADE)
     phone_number_1 = models.CharField("Phone number 1", max_length=20)
-    phone_number_2 = models.CharField("Phone number 2 (Optional)", max_length=20, null=True)
+    phone_number_2 = models.CharField("Phone number 2 (Optional)", max_length=20, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.address.user}"
