@@ -12,8 +12,8 @@ class CreateUserAccountApi(views.APIView):
     def post(self, request):
         user = _private.create_user_account(request.data)
         if user:
-            return Response(status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status": status.HTTP_201_CREATED})
+        return Response({"status": status.HTTP_400_BAD_REQUEST})
 
 
 class LoginApi(views.APIView):
@@ -25,5 +25,5 @@ class LoginApi(views.APIView):
             password=request.data["password"]
         )
         if user:
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({"status": status.HTTP_200_OK})
+        return Response({"status": status.HTTP_404_NOT_FOUND})
