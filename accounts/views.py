@@ -1,32 +1,29 @@
-from rest_framework import renderers
+from rest_framework import status
+from rest_framework import parsers
+from rest_framework import views
+from rest_framework.response import Response
 
-from django.shortcuts import HttpResponse
-from django.http import JsonResponse
-
-from . import models
-from . import serializers
-
-# Create your views here.
-
-def index(request):
-    user = models.User.objects.get(id=1)
-    user_serialized = serializers.UserSerializer(user)
-    print(user_serialized.data)
-
-    users_seralized = serializers.UserSerializer(
-        models.User.objects.all(),
-        many=True
-    )
-    print(users_seralized.data)
-
-    json_data = python_to_json(
-        user_serialized.data
-    )
-    print(json_data)
-    print()
-
-    return JsonResponse({"user": user_serialized.data, "users": users_seralized.data})
+from . import _private
 
 
-def python_to_json(data):
-    return renderers.JSONRenderer().render(data)
+class CreateUserAccountApi(views.APIView):
+    parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request):
+        user = _private.create_user_account(request.data)
+        if user:
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginApi(views.APIView):
+    parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
+
+    def post(self, request):
+        user = _private.get_user(
+            email=request.data["email"],
+            password=request.data["password"]
+        )
+        if user:
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
