@@ -6,4 +6,4 @@ from . import _private
 
 class ProductApi(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
-        return Response(_private.get_products(kwargs["range"]))
+        return Response(_private.get_products(kwargs["page_number"]))
