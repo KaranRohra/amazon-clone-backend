@@ -5,7 +5,7 @@ from . import constants
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.JSONField()
     quantity = models.PositiveIntegerField(default=1)
     price = models.PositiveIntegerField()
     shipping_fee = models.PositiveIntegerField(default=0)
