@@ -9,7 +9,6 @@ def get_products(page_number):
     product_start = product_end - number_of_products
 
     products = models.Product.objects.filter(quantity__gt=0)[product_start: product_end]
-    print(product_start, product_end, models.Product.objects.all())
     data = {}
     for i, product in zip(range(0, number_of_products), products):
         data[f"product_{i}"] = {
