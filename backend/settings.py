@@ -134,7 +134,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Overriding django default user table
 AUTH_USER_MODEL = 'accounts.User'
 
+# Cors headers to know who can access backend api's
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://localhost:3000",
 ]
+
+# To store media files
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'

@@ -1,5 +1,8 @@
 # Ignore sqlite database files
 *.sqlite3
 
-# Ignore cache files
+# Ignore cache folder
 __pycache__/
+
+# Ignore media folder
+media/
