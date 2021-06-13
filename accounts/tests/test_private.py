@@ -7,7 +7,10 @@ from . import helper
 
 class GetUserTest(TestCase):
     def test_get_user_with_known_email(self):
-        expected_user = helper.create_user(constants.EMAIL)
+        expected_user = helper.create_user(
+            email=constants.EMAIL,
+            password=constants.PASSWORD
+        )
         user = _private.get_user(
             email=constants.EMAIL
         )

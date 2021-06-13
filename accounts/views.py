@@ -1,7 +1,9 @@
 from rest_framework import status
 from rest_framework import parsers
 from rest_framework import views
+from rest_framework import permissions
 from rest_framework.response import Response
+from rest_framework import decorators
 
 from django.contrib import auth
 from django.http import JsonResponse
@@ -30,12 +32,16 @@ class LoginApi(views.APIView):
         return Response({"status": status.HTTP_404_NOT_FOUND})
 
 
+@decorators.api_view(["GET"])
+@decorators.permission_classes([permissions.IsAuthenticated])
 def get_email_api(request):
     if request.user.is_authenticated:
         return JsonResponse({"email": request.user.email})
     return JsonResponse({})
 
 
+@decorators.api_view(["GET"])
+@decorators.permission_classes([permissions.IsAuthenticated])
 def logout_api(request):
     auth.logout(request)
     return JsonResponse({})

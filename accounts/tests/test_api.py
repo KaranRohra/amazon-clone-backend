@@ -38,7 +38,7 @@ class CrateUserAccountTest(TestCase):
 
 class LoginTest(TestCase):
     def setUp(self) -> None:
-        self.url_path = reverse("accounts:login-user")
+        self.url_path = reverse("accounts:login")
         self.data = {
             "email": constants.EMAIL,
             "password": constants.PASSWORD
@@ -53,7 +53,7 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data
         )
-
+        self.assertEqual(self.client.login(**self.data), True)
         self.assertEqual(response.json(), {"status": 200})
 
     def test_login_without_user(self):
@@ -61,6 +61,7 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data
         )
+        self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), {"status": 404})
 
     def test_login_with_invalid_password(self):
@@ -73,4 +74,31 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data,
         )
+        self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), {"status": 404})
+
+
+class GetEmailApiTest(TestCase):
+    def setUp(self) -> None:
+        self.url_path = reverse("accounts:get-email")
+        self.data = {
+            "email": constants.EMAIL,
+            "password": constants.PASSWORD
+        }
+
+    def test_get_email_with_authenticated_user(self):
+        helper.create_user(**self.data)
+        self.client.login(**self.data)
+
+        response = self.client.get(path=self.url_path)
+        expected_response = {
+            "email": constants.EMAIL
+        }
+        self.assertEqual(expected_response, response.json())
+
+    def test_get_email_with_unauthenticated_user(self):
+        response = self.client.get(path=self.url_path)
+        expected_response = {
+            'detail': 'Authentication credentials were not provided.'
+        }
+        self.assertEqual(expected_response, response.json())
