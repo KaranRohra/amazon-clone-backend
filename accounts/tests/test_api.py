@@ -22,7 +22,11 @@ class CrateUserAccountTest(TestCase):
 
         # If this doesn't raise exception then it indicates that our api is working
         models.User.objects.get(email=constants.EMAIL)
-        self.assertEqual(response.json(), {"status": 201})
+        expected_response = {
+            "status": 201,
+            "status_text": "Account created successfully"
+        }
+        self.assertEqual(response.json(), expected_response)
 
     def test_create_user_with_already_exist_user(self):
         helper.create_user(
@@ -33,7 +37,23 @@ class CrateUserAccountTest(TestCase):
             path=self.url_path,
             data=self.data
         )
-        self.assertEqual(response.json(), {"status": 400})
+        expected_response = {
+            "status": 400,
+            "status_text": "Account already exist"
+        }
+        self.assertEqual(response.json(), expected_response)
+
+    def test_create_user_with_invalid_email(self):
+        self.data["email"] = constants.INVALID_EMAIL_SYNTAX
+        response = self.client.post(
+            path=self.url_path,
+            data=self.data,
+        )
+        expected_response = {
+            "status": 406,
+            "status_text": "Invalid email"
+        }
+        self.assertEqual(response.json(), expected_response)
 
 
 class LoginTest(TestCase):
@@ -53,16 +73,24 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data
         )
+        expected_response = {
+            "status": 200,
+            "status_text": "Login successfully"
+        }
         self.assertEqual(self.client.login(**self.data), True)
-        self.assertEqual(response.json(), {"status": 200})
+        self.assertEqual(response.json(), expected_response)
 
     def test_login_without_user(self):
         response = self.client.post(
             path=self.url_path,
             data=self.data
         )
+        expected_response = {
+            "status": 404,
+            "status_text": "User not found"
+        }
         self.assertEqual(self.client.login(**self.data), False)
-        self.assertEqual(response.json(), {"status": 404})
+        self.assertEqual(response.json(), expected_response)
 
     def test_login_with_invalid_password(self):
         helper.create_user(
@@ -74,8 +102,12 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data,
         )
+        expected_response = {
+            "status": 404,
+            "status_text": "User not found"
+        }
         self.assertEqual(self.client.login(**self.data), False)
-        self.assertEqual(response.json(), {"status": 404})
+        self.assertEqual(response.json(), expected_response)
 
 
 class GetEmailApiTest(TestCase):

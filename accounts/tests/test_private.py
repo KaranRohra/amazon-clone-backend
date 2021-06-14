@@ -35,3 +35,17 @@ class CreateUserTest(TestCase):
             "password": constants.PASSWORD,
         })
         self.assertEqual(user, None)
+
+
+class ValidEmailTest(TestCase):
+    def test_email_with_valid_email_syntax(self):
+        response = _private.is_email_valid(
+            email=constants.EMAIL
+        )
+        self.assertEqual(True, response)
+
+    def test_email_with_invalid_email_syntax(self):
+        response = _private.is_email_valid(
+            email=constants.INVALID_EMAIL_SYNTAX
+        )
+        self.assertEqual(False, response)

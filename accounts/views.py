@@ -15,11 +15,25 @@ class CreateUserAccountApi(views.APIView):
     parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
 
     def post(self, request):
+        response = {
+            "status": status.HTTP_406_NOT_ACCEPTABLE,
+            "status_text": "Invalid email"
+        }
+
+        # This condition helps to validate email if email is not proper then return 406
+        if not _private.is_email_valid(request.data["email"]):
+            return Response(response)
+
         user = _private.create_user_account(request.data)
         if user:
+            response["status"] = status.HTTP_201_CREATED
+            response["status_text"] = "Account created successfully"
             _private.login_user(request)
-            return Response({"status": status.HTTP_201_CREATED})
-        return Response({"status": status.HTTP_400_BAD_REQUEST})
+            return Response(response)
+
+        response["status"] = status.HTTP_400_BAD_REQUEST
+        response["status_text"] = "Account already exist"
+        return Response(response)
 
 
 class LoginApi(views.APIView):
@@ -27,9 +41,16 @@ class LoginApi(views.APIView):
 
     def post(self, request):
         user = _private.login_user(request)
+        response = {
+            "status": status.HTTP_200_OK,
+            "status_text": "Login successfully"
+        }
         if user:
-            return Response({"status": status.HTTP_200_OK})
-        return Response({"status": status.HTTP_404_NOT_FOUND})
+            return Response(response)
+
+        response["status"] = status.HTTP_404_NOT_FOUND  # indicating user not found
+        response["status_text"] = "User not found"
+        return Response(response)
 
 
 @decorators.api_view(["GET"])
