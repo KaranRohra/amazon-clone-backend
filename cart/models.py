@@ -14,5 +14,5 @@ class Cart(models.Model):
         default=None,
     )
 
-    def get_cart_product(self):
-        return self.products
+    def __str__(self):
+        return self.user.email
