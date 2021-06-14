@@ -1,7 +1,7 @@
 from django.test import TestCase
-from django.urls import reverse
-
-from backend.products import _private as products_private
+# from django.urls import reverse
+#
+# from backend.products import _private as products_private
 
 
 # def create_product(data):
