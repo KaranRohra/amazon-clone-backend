@@ -2,12 +2,14 @@ from rest_framework import views
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.response import Response
+from rest_framework.authentication import TokenAuthentication
 
 from . import _private
 
 
 class GetProductFromCartApi(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         products = _private.get_product_from_cart(
@@ -17,7 +19,8 @@ class GetProductFromCartApi(views.APIView):
 
 
 class AddProductApi(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         product = _private.add_product_to_cart(
@@ -36,7 +39,8 @@ class AddProductApi(views.APIView):
 
 
 class RemoveProductApi(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         product = _private.remove_product_from_cart(

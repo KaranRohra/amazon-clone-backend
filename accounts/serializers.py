@@ -5,7 +5,7 @@ from . import models
 
 class UserSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=254)
-    password = serializers.CharField(max_length=128)
+    password = serializers.CharField(max_length=128, write_only=True)
     is_staff = serializers.BooleanField(default=False)
     is_superuser = serializers.BooleanField(default=False)
 
