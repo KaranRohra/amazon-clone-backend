@@ -5,6 +5,19 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 
 from . import _private
+from . import models
+
+
+class CreateCartApi(views.APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        models.Cart.objects.create(user=request.user)
+        return Response({
+            "status": status.HTTP_201_CREATED,
+            "status_text": f"Cart created for user {request.user.email}"
+        })
 
 
 class GetProductFromCartApi(views.APIView):
