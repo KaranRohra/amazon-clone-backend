@@ -11,7 +11,7 @@
     3) Start virtual environment
         1) Windows: `env\Scripts\activate`
         2) mac / linux: `source env/bin/activate`
-    4) Install all requirements `pip install -r requirement.txt`
+    4) Install all requirements `pip install -r requirementx.txt`
     5) Create database `python manage.py migrate`
     6) Finally, runserver the server on `5000 PORT` using the command `python manage.py runserver 5000`
     7) From next time repeat steps from `5` if you have pull the code or else always run from step `6`
