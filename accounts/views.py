@@ -1,68 +1,33 @@
 from rest_framework import status
-from rest_framework import parsers
+from rest_framework.authtoken import models as authtoken_models
 from rest_framework import views
 from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework import decorators
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import generics
 
-from django.contrib import auth
-from django.http import JsonResponse
-
-from . import _private
-
-
-class CreateUserAccountApi(views.APIView):
-    parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
-
-    def post(self, request):
-        response = {
-            "status": status.HTTP_406_NOT_ACCEPTABLE,
-            "status_text": "Invalid email"
-        }
-
-        # This condition helps to validate email if email is not proper then return 406
-        if not _private.is_email_valid(request.data["email"]):
-            return Response(response)
-
-        user = _private.create_user_account(request.data)
-        if user:
-            response["status"] = status.HTTP_201_CREATED
-            response["status_text"] = "Account created successfully"
-            _private.login_user(request)
-            return Response(response)
-
-        response["status"] = status.HTTP_400_BAD_REQUEST
-        response["status_text"] = "Account already exist"
-        return Response(response)
+from . import serializers
+from . import models
 
 
-class LoginApi(views.APIView):
-    parser_classes = [parsers.JSONParser, parsers.FormParser, parsers.MultiPartParser]
-
-    def post(self, request):
-        user = _private.login_user(request)
-        response = {
-            "status": status.HTTP_200_OK,
-            "status_text": "Login successfully"
-        }
-        if user:
-            return Response(response)
-
-        response["status"] = status.HTTP_404_NOT_FOUND  # indicating user not found
-        response["status_text"] = "User not found"
-        return Response(response)
+class RegisterApi(generics.CreateAPIView):
+    serializer_class = serializers.UserSerializer
+    queryset = models.User.objects.all()
 
 
-@decorators.api_view(["GET"])
-@decorators.permission_classes([permissions.IsAuthenticated])
-def get_email_api(request):
-    if request.user.is_authenticated:
-        return JsonResponse({"email": request.user.email})
-    return JsonResponse({})
+class LogoutApi(views.APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        authtoken_models.Token.objects.get(user__email=request.user).delete()
+        return Response({"status": status.HTTP_200_OK, "status_text": "Logout success"})
 
 
-@decorators.api_view(["GET"])
-@decorators.permission_classes([permissions.IsAuthenticated])
-def logout_api(request):
-    auth.logout(request)
-    return JsonResponse({})
+class GetUserApi(views.APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        request.session.flush()
+        return Response(serializers.UserSerializer(request.user).data)
