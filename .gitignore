@@ -4,5 +4,19 @@
 # Ignore cache folder
 __pycache__/
 
+*.log
+
+*.pot
+
+*.pyc
+
+*/*/*/__pycache__/
+
+*/*/__pycache__/
+
+*/__pycache__/
+
+
+
 # Ignore media folder
 media/
