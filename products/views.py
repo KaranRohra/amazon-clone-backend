@@ -14,7 +14,9 @@ class ProductApi(generics.ListAPIView):
 
 class GetProductsApi(views.APIView):
     def get(self, request, *args, **kwargs):
-        products = models.Product.objects.all()
-        product_seri = serializers.ProductSerializer(products, many=True)
-        return Response(product_seri.data)
+        serialized_product = serializers.ProductSerializer(
+            models.Product.objects.all(),
+            many=True
+        )
+        return Response(serialized_product.data)
 
