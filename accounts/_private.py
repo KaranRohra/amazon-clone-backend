@@ -2,6 +2,7 @@ import re
 
 from django.contrib import auth
 
+from cart import models as cart_models
 from . import models
 from . import serializers
 
