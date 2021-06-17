@@ -12,6 +12,7 @@ class Cart(models.Model):
     products = models.ManyToManyField(
         to=product_models.Product,
         default=None,
+        blank=True,
     )
 
     def __str__(self):

@@ -30,9 +30,6 @@ def create_user_account(user_info):
     if not user.is_valid() or get_user(user.validated_data["email"]):
         return None
     user.save()
-    cart_models.Cart(user=models.User(
-        **user_info
-    ).save())
     return user
 
 

@@ -14,6 +14,4 @@ def get_products(page_number):
     product_start = product_end - number_of_products
 
     products = models.Product.objects.filter(quantity__gt=0)[product_start: product_end]
-    return serializers.product_with_image_serializer(
-        products=products
-    )
+    return serializers.ProductSerializer(products, many=True).data
