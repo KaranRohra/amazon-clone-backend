@@ -1,14 +1,19 @@
+from rest_framework.authtoken import models as authtoken_models
+from rest_framework import status
+
 from django.test import TestCase
 from django.urls import reverse
+from django.db import IntegrityError
 
 from accounts import constants
 from accounts import models
-from . import helper
+from accounts import serializers
+from common.tests import helper
 
 
 class CrateUserAccountTest(TestCase):
     def setUp(self) -> None:
-        self.url_path = reverse("accounts:create-user")
+        self.url_path = reverse("accounts:register")
         self.data = {
             "email": constants.EMAIL,
             "password": constants.PASSWORD
@@ -21,27 +26,26 @@ class CrateUserAccountTest(TestCase):
         )
 
         # If this doesn't raise exception then it indicates that our api is working
-        models.User.objects.get(email=constants.EMAIL)
-        expected_response = {
-            "status": 201,
-            "status_text": "Account created successfully"
-        }
+        user = models.User.objects.get(email=constants.EMAIL)
+        expected_response = serializers.UserSerializer(user).data
         self.assertEqual(response.json(), expected_response)
+        self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_user_with_already_exist_user(self):
         helper.create_user(
             email=constants.EMAIL,
             password=constants.PASSWORD,
         )
-        response = self.client.post(
-            path=self.url_path,
-            data=self.data
-        )
-        expected_response = {
-            "status": 400,
-            "status_text": "Account already exist"
-        }
-        self.assertEqual(response.json(), expected_response)
+        try:
+            response = self.client.post(
+                path=self.url_path,
+                data=self.data
+            )
+            self.assertEqual(status.HTTP_500_INTERNAL_SERVER_ERROR, response.status_code)
+        except IntegrityError:
+            self.assertEqual(True, True)
+        else:
+            self.assertEqual(True, False)
 
     def test_create_user_with_invalid_email(self):
         self.data["email"] = constants.INVALID_EMAIL_SYNTAX
@@ -50,17 +54,17 @@ class CrateUserAccountTest(TestCase):
             data=self.data,
         )
         expected_response = {
-            "status": 406,
-            "status_text": "Invalid email"
+            "email": ["Enter a valid email address."]
         }
         self.assertEqual(response.json(), expected_response)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
 
 class LoginTest(TestCase):
     def setUp(self) -> None:
-        self.url_path = reverse("accounts:login")
+        self.url_path = reverse("accounts:auth")
         self.data = {
-            "email": constants.EMAIL,
+            "username": constants.EMAIL,
             "password": constants.PASSWORD
         }
 
@@ -73,12 +77,13 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data
         )
+
         expected_response = {
-            "status": 200,
-            "status_text": "Login successfully"
+            "token": authtoken_models.Token.objects.get(user__email=constants.EMAIL).key
         }
         self.assertEqual(self.client.login(**self.data), True)
         self.assertEqual(response.json(), expected_response)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_login_without_user(self):
         response = self.client.post(
@@ -86,11 +91,11 @@ class LoginTest(TestCase):
             data=self.data
         )
         expected_response = {
-            "status": 404,
-            "status_text": "User not found"
+            "non_field_errors": ["Unable to log in with provided credentials."]
         }
         self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), expected_response)
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
     def test_login_with_invalid_password(self):
         helper.create_user(
@@ -103,34 +108,8 @@ class LoginTest(TestCase):
             data=self.data,
         )
         expected_response = {
-            "status": 404,
-            "status_text": "User not found"
+            "non_field_errors": ["Unable to log in with provided credentials."]
         }
         self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), expected_response)
-
-
-class GetEmailApiTest(TestCase):
-    def setUp(self) -> None:
-        self.url_path = reverse("accounts:get-email")
-        self.data = {
-            "email": constants.EMAIL,
-            "password": constants.PASSWORD
-        }
-
-    def test_get_email_with_authenticated_user(self):
-        helper.create_user(**self.data)
-        self.client.login(**self.data)
-
-        response = self.client.get(path=self.url_path)
-        expected_response = {
-            "email": constants.EMAIL
-        }
-        self.assertEqual(expected_response, response.json())
-
-    def test_get_email_with_unauthenticated_user(self):
-        response = self.client.get(path=self.url_path)
-        expected_response = {
-            'detail': 'Authentication credentials were not provided.'
-        }
-        self.assertEqual(expected_response, response.json())
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
