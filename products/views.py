@@ -1,22 +1,24 @@
-from rest_framework.response import Response
 from rest_framework import generics
-from rest_framework import views
+from rest_framework import viewsets
 
 from . import _private
 from . import serializers
 from . import models
 
 
-class ProductApi(generics.ListAPIView):
-    def get(self, request, *args, **kwargs):
-        return Response(_private.get_products(kwargs["page_number"]))
+class ProductsApi(generics.ListAPIView):
+    serializer_class = serializers.ProductSerializer
+
+    def get_queryset(self):
+        return _private.get_products(self.kwargs["page_number"])
 
 
-class GetProductsApi(views.APIView):
-    def get(self, request, *args, **kwargs):
-        serialized_product = serializers.ProductSerializer(
-            models.Product.objects.all(),
-            many=True
-        )
-        return Response(serialized_product.data)
+class ImageApi(generics.RetrieveAPIView):
+    serializer_class = serializers.ProductImageSerializer
+    queryset = models.ProductImage.objects.all()
+    lookup_field = "id"
 
+
+class ProductApi(viewsets.ModelViewSet):
+    serializer_class = serializers.ProductSerializer
+    queryset = models.Product.objects.all()
