@@ -1,0 +1,27 @@
+import argparse
+import os
+import re
+import sys
+from typing import IO
+from typing import Optional
+from typing import Sequence
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filenames', nargs='*', help='Filenames to fix')
+    args = parser.parse_args(argv)
+
+    # Use https://pythex.org/ to debug
+    # matches any commit msg starting with "[REF #123]:" or "[CLOSES #123]:"
+    REGEX_PATTERN = r'\[(REF|closes|fix|reference) #[0-9]{2,4}\]:'
+
+    with open(args.filenames[0]) as file:
+        commit_msg = file.read()
+        commit_pattern_match = re.match(REGEX_PATTERN, commit_msg)
+    if not commit_pattern_match:
+        sys.stdout.write('Commit message format mismatch. Recommended format - "[REF #12]: eg msg" where "#12" is gitlab issue id and "eg msg" is any msg you have ')
+        return 1
+    return 0
+
+if __name__ == '__main__':
+    exit(main())
