@@ -7,12 +7,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics
 
 from accounts import serializers
-from accounts import models
 
 
 class RegisterApi(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
-    queryset = models.User.objects.all()
 
 
 class LogoutApi(views.APIView):

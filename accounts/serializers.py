@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from accounts import models
+from cart import models as cart_models
 
 
 class UserSerializer(serializers.Serializer):
@@ -15,4 +16,5 @@ class UserSerializer(serializers.Serializer):
         )
         user.set_password(validate_data["password"])
         user.save()
+        cart_models.Cart.objects.create(user=user)
         return user
