@@ -4,8 +4,8 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 
-from . import _private
-from . import models
+from cart import _private
+from cart import models
 
 
 class CreateCartApi(views.APIView):

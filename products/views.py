@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework import viewsets
 
-from . import _private
-from . import serializers
-from . import models
+from products import _private
+from products import serializers
+from products import models
 
 
 class ProductsApi(generics.ListAPIView):
