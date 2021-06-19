@@ -1,5 +1,4 @@
 from products import models
-from products import serializers
 
 
 def get_products(page_number):
