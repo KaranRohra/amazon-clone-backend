@@ -1,6 +1,6 @@
 from django.db import models
 
-from . import constants
+from products import constants
 
 
 class Product(models.Model):

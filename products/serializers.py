@@ -1,15 +1,6 @@
 from rest_framework import serializers
 
-from . import models
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    images = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = models.Product
-        fields = [field.name for field in models.Product._meta.get_fields()]
-        fields.remove("cart")
+from products import models
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
@@ -18,3 +9,12 @@ class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProductImage
         fields = "__all__"
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = models.Product
+        fields = [field.name for field in models.Product._meta.get_fields()]
+        fields.remove("cart")
