@@ -1,0 +1,20 @@
+pre-commit:
+  parallel: true
+  commands:
+    # black_backend_lint:
+    #   root: "backend/"
+    #   glob: "*.py"
+    #   run: docker run --rm -v ${PWD}/:/app/ enerlly_server_backend /bin/sh -c "black {staged_files}" && git add {staged_files}
+    # flake8_backend_lint:
+    #   root: "backend/"
+    #   glob: "*.py"
+    #   run: docker run --rm -v ${PWD}/:/app/ enerlly_server_backend /bin/sh -c "flake8 {staged_files}" && git add {staged_files}
+    prevent_bad_branch_name:
+      files: git diff --name-only HEAD
+      run: "python ./githooks/branch_name.py"
+    prevent_print_statement:
+      run: "bash ./githooks/print_statement.sh"
+commit-msg:
+  scripts:
+    "gitlab_issue_id":
+      runner: python
