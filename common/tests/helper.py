@@ -10,13 +10,13 @@ def create_user(**user_info):
     return user
 
 
-def create_cart_with_products(user_obj, number_of_products):
+def create_cart(user_obj, number_of_products):
     cart = cart_models.Cart.objects.create(user=user_obj)
-    for _ in number_of_products:
-        cart.products.set(create_product(3))
+    cart.products.set(create_products(number_of_products))
+    return cart
 
 
-def create_product(number_of_products):
+def create_products(number_of_products):
     products = []
     for _ in range(number_of_products):
         product = products_models.Product(
@@ -27,12 +27,15 @@ def create_product(number_of_products):
             price=1000,
             category="Mobile",
         )
+        product.save()
         products.append(product)
+        create_images(product)
     return products
 
 
-def create_image(product):
+def create_images(product):
     for _ in range(3):
-        product.image_set.create(
+        products_models.ProductImage(
+            product=product,
             image_url="media/product_image/test_image.png"
-        )
+        ).save()
