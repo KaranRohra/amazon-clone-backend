@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
-from . import models
+from accounts import models
 
 
 class PhoneInline(admin.StackedInline):

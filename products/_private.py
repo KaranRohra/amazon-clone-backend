@@ -1,4 +1,4 @@
-from . import models
+from products import models
 
 
 def get_products(page_number):

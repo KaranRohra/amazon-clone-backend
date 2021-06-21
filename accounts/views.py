@@ -6,13 +6,11 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics
 
-from . import serializers
-from . import models
+from accounts import serializers
 
 
 class RegisterApi(generics.CreateAPIView):
     serializer_class = serializers.UserSerializer
-    queryset = models.User.objects.all()
 
 
 class LogoutApi(views.APIView):
