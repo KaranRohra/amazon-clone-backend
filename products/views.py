@@ -1,6 +1,8 @@
 from rest_framework import generics
 from rest_framework import viewsets
 
+from django.db import models as db_models
+
 from products import _private
 from products import serializers
 from products import models
