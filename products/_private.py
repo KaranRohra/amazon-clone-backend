@@ -21,4 +21,4 @@ def get_products(page_number, search_by):
     )
     if res:
         return res[start_product_index:end_product_index]
-    return models.objects.all()[start_product_index:end_product_index]
+    return models.Product.objects.all()[start_product_index:end_product_index]
