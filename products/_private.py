@@ -4,12 +4,13 @@ from products import models
 def get_products(page_number):
     """
     :param page_number: contains page_number
-    if page_number is 0 we send 5 records of product
-    else 10 records of product
+    return the 5 product according to page_number
+
+    :return <= 5 products
     """
-    number_of_products = 5 if page_number else 10
+    end_product_index = page_number * 5
+    start_product_index = end_product_index - 5
 
-    product_end = (page_number if page_number else 1) * number_of_products
-    product_start = product_end - number_of_products
-
-    return models.Product.objects.filter(quantity__gt=0)[product_start: product_end]
+    return models.Product.objects.filter(quantity__gt=0)[
+        start_product_index:end_product_index
+    ]

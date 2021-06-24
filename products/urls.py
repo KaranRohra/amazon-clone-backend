@@ -9,7 +9,6 @@ router = routers.DefaultRouter()
 router.register("", views.ProductApi, basename="product")
 
 urlpatterns = [
-    path("get-product-by-page-number/<int:page_number>/", views.ProductsApi.as_view(),
-         name="get-product-by-page-number"),
-    path("image/<int:id>/", views.ImageApi.as_view(), name="get-image")
+    path("page-number/<int:page_number>/", views.ProductsPageNumberApi.as_view(),
+         name="page-number"),
 ] + router.urls

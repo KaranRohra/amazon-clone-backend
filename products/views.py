@@ -6,18 +6,11 @@ from products import serializers
 from products import models
 
 
-class ProductsApi(generics.ListAPIView):
+class ProductsPageNumberApi(generics.ListAPIView):
     serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
         return _private.get_products(self.kwargs["page_number"])
-
-
-class ImageApi(generics.RetrieveAPIView):
-    serializer_class = serializers.ProductImageSerializer
-    queryset = models.ProductImage.objects.all()
-    lookup_field = "id"
-
 
 class ProductApi(viewsets.ModelViewSet):
     serializer_class = serializers.ProductSerializer
