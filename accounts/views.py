@@ -5,8 +5,9 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics
+from rest_framework import viewsets
 
-from accounts import serializers
+from accounts import models, serializers
 
 
 class RegisterApi(generics.CreateAPIView):
@@ -27,5 +28,18 @@ class GetUserApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        request.session.flush()
         return Response(serializers.UserSerializer(request.user).data)
+
+
+class GetUserAddresApi(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.AddressSerializer
+    queryset = models.Address.objects.all()
+
+    def list(self, request):
+        user_address = serializers.AddressSerializer(
+            models.Address.objects.filter(user=request.user), 
+            many=True
+        ).data
+        return Response(user_address)
