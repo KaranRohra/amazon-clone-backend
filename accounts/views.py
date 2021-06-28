@@ -7,7 +7,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework import generics
 from rest_framework import viewsets
 
-from accounts import models, serializers
+from accounts import models
+from accounts import serializers
 
 
 class RegisterApi(generics.CreateAPIView):
