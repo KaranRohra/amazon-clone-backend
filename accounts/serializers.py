@@ -5,7 +5,9 @@ from cart import models as cart_models
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
     def create(self, validate_data):
+        validate_data["is_active"] = True
         user = models.User(
             **validate_data
         )
@@ -16,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.User
-        exclude = ["groups", "user_permissions", "password"]
+        exclude = ["groups", "user_permissions", "is_staff", "is_superuser"]
 
 
 class AddressSerializer(serializers.ModelSerializer):
