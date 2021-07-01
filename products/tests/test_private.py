@@ -1,32 +1,17 @@
 from django.test import TestCase
-# from django.urls import reverse
-#
-# from backend.products import _private as products_private
 
+from common.tests import helper
+from products import _private
 
-# def create_product(data):
-#     return products_models.Product.objects.create(**data)
-#
-#
-# class GetProductTest(TestCase):
-#     def test_get_product_without_products(self):
-#         response = products_private.get_products(
-#             page_number=0
-#         )
-#         self.assertEqual({}, response.json())
-#
-#     def test_get_product_with_page_number_as_0(self):
-#         expected_data = []
-#         for i in range(10):
-#             expected_data.append(create_product(data={
-#                 "name": "iphone",
-#                 "description": {
-#                     "brand": "apple",
-#                     "color": "blue",
-#                 },
-#                 "price": 100,
-#                 "shipping_fee": 0,
-#                 "quantity": 1,
-#             }))
-#
-#         self.assertEqual()
+class GetProductsTest(TestCase):
+    def setUp(self) -> None:
+        self.page_number = 1
+        self.last_page_number = 2
+        self.invalid_page_number = -1
+    
+    def test_get_product_with_products(self):
+        products = helper.create_products(number_of_products=10)
+        expected_response = products[:5]
+
+        response = _private.get_products()
+        # TODO

@@ -1,15 +1,26 @@
+from django.db import models as db_models
+
 from products import models
 
 
-def get_products(page_number):
+def get_products(page_number, search_by):
     """
     :param page_number: contains page_number
-    if page_number is 0 we send 5 records of product
-    else 10 records of product
+    return the 5 product according to page_number
+
+    :return <= 5 products
     """
-    number_of_products = 5 if page_number else 10
+    if page_number <= 0:
+        raise ValueError("Invalid page number")
+    
+    end_product_index = page_number * 5
+    start_product_index = end_product_index - 5
 
-    product_end = (page_number if page_number else 1) * number_of_products
-    product_start = product_end - number_of_products
-
-    return models.Product.objects.filter(quantity__gt=0)[product_start: product_end]
+    res = models.Product.objects.filter(
+        db_models.Q(name__icontains=search_by) |
+        db_models.Q(category__icontains=search_by),
+        quantity__gt=0
+    )
+    if res:
+        return res[start_product_index:end_product_index]
+    return models.Product.objects.all()[start_product_index:end_product_index]
