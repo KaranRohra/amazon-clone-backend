@@ -1,16 +1,13 @@
-from rest_framework import serializers
+from rest_framework import fields, serializers
 
 from accounts import models
 from cart import models as cart_models
 
 
-class UserSerializer(serializers.Serializer):
-    email = serializers.EmailField(max_length=254)
-    password = serializers.CharField(max_length=128, write_only=True)
-    is_staff = serializers.BooleanField(default=False)
-    is_superuser = serializers.BooleanField(default=False)
-
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
     def create(self, validate_data):
+        validate_data["is_active"] = True
         user = models.User(
             **validate_data
         )
@@ -18,3 +15,15 @@ class UserSerializer(serializers.Serializer):
         user.save()
         cart_models.Cart.objects.create(user=user)
         return user
+    
+    class Meta:
+        model = models.User
+        exclude = ["groups", "user_permissions", "is_staff", "is_superuser"]
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return models.Address.objects.create(**validated_data)
+    class Meta:
+        model = models.Address
+        fields = "__all__"
