@@ -10,7 +10,7 @@ class PhoneInline(admin.StackedInline):
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('user','country', 'state', 'city')
+    list_display = ("id", 'user','country', 'state', 'city')
     search_fields = ('user__email',)
     inlines = (PhoneInline,)
 

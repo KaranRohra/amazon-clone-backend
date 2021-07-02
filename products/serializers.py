@@ -16,5 +16,4 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Product
-        fields = [field.name for field in models.Product._meta.get_fields()]
-        fields.remove("cart")
+        fields = "__all__"
