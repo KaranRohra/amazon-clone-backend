@@ -3,16 +3,12 @@ from django.contrib.auth import admin as auth_admin
 from accounts import models
 
 
-class PhoneInline(admin.StackedInline):
-    model = models.Phone
-    extra = 2
 
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('user','country', 'state', 'city')
+    list_display = ("id", 'user','country', 'state', 'city')
     search_fields = ('user__email',)
-    inlines = (PhoneInline,)
 
 
 @admin.register(models.User)
