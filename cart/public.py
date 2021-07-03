@@ -7,4 +7,8 @@ def remove_products_from_cart(user):
 
 
 def get_all_products_from_cart(user):
-    return models.Cart.objects.get(user=user).products.all()
+    try:
+        products = models.Cart.objects.get(user=user).products.all()
+    except models.Cart.DoesNotExist:
+        raise models.Cart.DoesNotExist("User not registered")
+    return products

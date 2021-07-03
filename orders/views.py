@@ -3,8 +3,7 @@ from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from accounts import models as accounts_models
-from cart import public as cart_public
+from orders import _private
 from orders import models
 from orders import serializers
 
@@ -23,16 +22,12 @@ class OrdersApi(viewsets.ModelViewSet):
         return Response(orders)
     
     def create(self, request):
-        products = cart_public.get_all_products_from_cart(user=request.user)
-        address = accounts_models.Address.objects.get(pk=request.POST["address"])
-        for product in products:
-            models.Order.objects.create(
-                user=request.user,
-                address=address,
-                product=product,
-            )
-        cart_public.remove_products_from_cart(user=request.user)
-        return Response({"Order status": "Success"})
+        try:
+            _private.place_order(user=request.user, address=request.POST["address"])
+            response = {"Order status": "Success"}
+        except Exception as e:
+            response = {"error": str(e)}
+        return Response(response)
 
     def destroy(self, request, pk=None):
         return Response({"Order status": "Cannot delete"})
