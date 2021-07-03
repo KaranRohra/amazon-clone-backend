@@ -1,4 +1,4 @@
-from rest_framework import fields, serializers
+from rest_framework import serializers
 
 from accounts import models
 from cart import models as cart_models
@@ -24,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return models.Address.objects.create(**validated_data)
+    
     class Meta:
         model = models.Address
-        fields = "__all__"
+        fields =  "__all__"
