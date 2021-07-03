@@ -26,13 +26,11 @@ class OrdersApi(viewsets.ModelViewSet):
         products = cart_public.get_all_products_from_cart(user=request.user)
         address = accounts_models.Address.objects.get(pk=request.POST["address"])
         for product in products:
-            product.quantity-=1
             models.Order.objects.create(
                 user=request.user,
                 address=address,
                 product=product,
             )
-            product.save()
         cart_public.remove_products_from_cart(user=request.user)
         return Response({"Order status": "Success"})
 
