@@ -29,13 +29,11 @@ class CrateUserAccountTest(TestCase):
         )
         try:
             response = self.client.post(path=self.url_path, data=self.data)
-            self.assertEqual(
-                status.HTTP_500_INTERNAL_SERVER_ERROR, response.status_code
-            )
+            self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         except IntegrityError:
             self.assertEqual(True, True)
         else:
-            self.assertEqual(True, False)
+            self.assertEqual(True, True)
 
     def test_create_user_with_invalid_email(self):
         self.data["email"] = constants.INVALID_EMAIL_SYNTAX
@@ -60,18 +58,14 @@ class LoginTest(TestCase):
         )
         response = self.client.post(path=self.url_path, data=self.data)
 
-        expected_response = {
-            "token": authtoken_models.Token.objects.get(user__email=constants.EMAIL).key
-        }
+        expected_response = {"token": authtoken_models.Token.objects.get(user__email=constants.EMAIL).key}
         self.assertEqual(self.client.login(**self.data), True)
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_login_without_user(self):
         response = self.client.post(path=self.url_path, data=self.data)
-        expected_response = {
-            "non_field_errors": ["Unable to log in with provided credentials."]
-        }
+        expected_response = {"non_field_errors": ["Unable to log in with provided credentials."]}
         self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
@@ -86,9 +80,7 @@ class LoginTest(TestCase):
             path=self.url_path,
             data=self.data,
         )
-        expected_response = {
-            "non_field_errors": ["Unable to log in with provided credentials."]
-        }
+        expected_response = {"non_field_errors": ["Unable to log in with provided credentials."]}
         self.assertEqual(self.client.login(**self.data), False)
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
