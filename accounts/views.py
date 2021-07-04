@@ -34,7 +34,5 @@ class GetUserAddresApi(viewsets.ModelViewSet):
     queryset = models.Address.objects.all()
 
     def list(self, request):
-        user_address = serializers.AddressSerializer(
-            models.Address.objects.filter(user=request.user), many=True
-        ).data
+        user_address = serializers.AddressSerializer(models.Address.objects.filter(user=request.user), many=True).data
         return Response(user_address)

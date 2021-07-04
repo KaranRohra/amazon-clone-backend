@@ -17,8 +17,7 @@ def get_products(page_number, search_by):
     start_product_index = end_product_index - 5
 
     res = models.Product.objects.filter(
-        db_models.Q(name__icontains=search_by)
-        | db_models.Q(category__icontains=search_by),
+        db_models.Q(name__icontains=search_by) | db_models.Q(category__icontains=search_by),
         quantity__gt=0,
     )
     if res:

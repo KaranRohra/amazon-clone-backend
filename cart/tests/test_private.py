@@ -12,9 +12,7 @@ class GetProductTest(TestCase):
     def test_get_products_with_valid_products(self):
         user = helper.create_user(**self.data)
         cart = helper.create_cart(user_obj=user, number_of_products=3)
-        expected_response = serializers.ProductSerializer(
-            cart.products.all(), many=True
-        ).data
+        expected_response = serializers.ProductSerializer(cart.products.all(), many=True).data
         response = _private.get_product_from_cart(user_email=user.email)
         self.assertEqual(expected_response, response)
 
@@ -38,9 +36,7 @@ class GetProductTest(TestCase):
     def test_get_products_without_products(self):
         user = helper.create_user(**self.data)
         cart = helper.create_cart(user_obj=user, number_of_products=0)
-        expected_response = serializers.ProductSerializer(
-            cart.products.all(), many=True
-        ).data
+        expected_response = serializers.ProductSerializer(cart.products.all(), many=True).data
         response = _private.get_product_from_cart(user_email=user.email)
         self.assertEqual(expected_response, response)
 
@@ -56,9 +52,7 @@ class AddProductToCartTest(TestCase):
             number_of_products=0,  # 0 Indicating empty cart
         )
         products = helper.create_products(number_of_products=1)
-        added_product = _private.add_product_to_cart(
-            user_email=user.email, product_id=products[0].id
-        )
+        added_product = _private.add_product_to_cart(user_email=user.email, product_id=products[0].id)
         self.assertEqual(cart.products.get(id=products[0].id), added_product)
         self.assertEqual(added_product, products[0])
 
@@ -100,9 +94,7 @@ class RemoveProductFromCartTest(TestCase):
         self.assertEqual(cart.products.count(), 1)  # Before remove
 
         product = cart.products.get(id=1)
-        removed_product = _private.remove_product_from_cart(
-            user_email=user.email, product_id=1
-        )
+        removed_product = _private.remove_product_from_cart(user_email=user.email, product_id=1)
         self.assertEqual(cart.products.count(), 0)  # After remove
         self.assertEqual(removed_product, product)
 

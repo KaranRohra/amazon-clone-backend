@@ -13,9 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="address",
             name="phone_number_1",
-            field=models.CharField(
-                default="Not available", max_length=20, verbose_name="Phone number 1"
-            ),
+            field=models.CharField(default="Not available", max_length=20, verbose_name="Phone number 1"),
         ),
         migrations.AddField(
             model_name="address",

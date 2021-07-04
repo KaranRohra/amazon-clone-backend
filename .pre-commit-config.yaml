@@ -39,6 +39,3 @@ repos:
     rev: 5.9.1
     hooks:
       - id: isort
-
-
-      

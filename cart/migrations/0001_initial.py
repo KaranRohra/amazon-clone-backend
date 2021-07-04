@@ -29,9 +29,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "products",
-                    models.ManyToManyField(
-                        default=None, null=True, to="products.Product"
-                    ),
+                    models.ManyToManyField(default=None, null=True, to="products.Product"),
                 ),
                 (
                     "user",

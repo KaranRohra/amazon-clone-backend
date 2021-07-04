@@ -4,9 +4,7 @@ from products import models
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
-    product = serializers.PrimaryKeyRelatedField(
-        queryset=models.Product.objects.all(), many=False
-    )
+    product = serializers.PrimaryKeyRelatedField(queryset=models.Product.objects.all(), many=False)
 
     class Meta:
         model = models.ProductImage

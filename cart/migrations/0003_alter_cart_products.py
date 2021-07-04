@@ -14,8 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="cart",
             name="products",
-            field=models.ManyToManyField(
-                blank=True, default=None, to="products.Product"
-            ),
+            field=models.ManyToManyField(blank=True, default=None, to="products.Product"),
         ),
     ]

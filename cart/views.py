@@ -19,9 +19,7 @@ class AddProductApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        product = _private.add_product_to_cart(
-            user_email=request.user.email, product_id=kwargs["product_id"]
-        )
+        product = _private.add_product_to_cart(user_email=request.user.email, product_id=kwargs["product_id"])
         if product:
             return Response(
                 data={
@@ -42,9 +40,7 @@ class RemoveProductApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        product = _private.remove_product_from_cart(
-            user_email=request.user.email, product_id=kwargs["product_id"]
-        )
+        product = _private.remove_product_from_cart(user_email=request.user.email, product_id=kwargs["product_id"])
         if product:
             return Response(
                 data={
