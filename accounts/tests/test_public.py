@@ -1,9 +1,7 @@
 from django.test import TestCase
 
-from accounts import public
-from accounts import models
-from common.tests import helper
-from common.tests import constants
+from accounts import models, public
+from common.tests import constants, helper
 
 
 class GetAddressByPkTestCase(TestCase):
@@ -12,7 +10,7 @@ class GetAddressByPkTestCase(TestCase):
         expected_address = helper.create_address(user=user)[0]
         response = public.get_address_by_pk(1)
         self.assertEqual(expected_address, response)
-    
+
     def test_get_address_with_invalid_pk(self):
-        with self.assertRaises(models.Address.DoesNotExist): 
+        with self.assertRaises(models.Address.DoesNotExist):
             public.get_address_by_pk(1)

@@ -20,5 +20,5 @@ ADDRESS = {
     "address_line": "Section 18",
     "phone_number_1": "1234567890",
     "phone_number_2": "9876543210",
-    "name": "Tester"
+    "name": "Tester",
 }

@@ -15,10 +15,10 @@
     5) Create database `python manage.py migrate`
     6) Finally, runserver the server on `5000 PORT` using the command `python manage.py runserver 5000`
     7) From next time repeat steps from `5` if you have pull the code or else always run from step `6`
-    
+
 - Now your server is up and running on http://localhost:5000/
 - Now setup [frontend](https://github.com/KaranRohra/amazon-clone-frontend/)
-  
+
 - At the end, your project structure should look like:
     - amazon-clone
         - amazon-clone-backend
@@ -27,6 +27,6 @@
             - other files
         - amazon-clone-frontend
             - other files
-    
+
 - Note: Make sure you have python >= 3.8
 - Remember: Always `run backend server` before `frontend` otherwise `frontend` not work

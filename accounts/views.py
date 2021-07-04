@@ -1,14 +1,9 @@
-from rest_framework import status
-from rest_framework.authtoken import models as authtoken_models
-from rest_framework import views
-from rest_framework import permissions
-from rest_framework.response import Response
+from rest_framework import generics, permissions, status, views, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework import generics
-from rest_framework import viewsets
+from rest_framework.authtoken import models as authtoken_models
+from rest_framework.response import Response
 
-from accounts import models
-from accounts import serializers
+from accounts import models, serializers
 
 
 class RegisterApi(generics.CreateAPIView):
@@ -39,8 +34,5 @@ class UserAddresApi(viewsets.ModelViewSet):
     queryset = models.Address.objects.all()
 
     def list(self, request):
-        user_address = serializers.AddressSerializer(
-            models.Address.objects.filter(user=request.user), 
-            many=True
-        ).data
+        user_address = serializers.AddressSerializer(models.Address.objects.filter(user=request.user), many=True).data
         return Response(user_address)
