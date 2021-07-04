@@ -1,8 +1,6 @@
-from rest_framework import views
-from rest_framework import status
-from rest_framework import permissions
-from rest_framework.response import Response
+from rest_framework import permissions, status, views
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.response import Response
 
 from cart import _private
 
@@ -12,9 +10,7 @@ class GetProductFromCartApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        products = _private.get_product_from_cart(
-            user_email=request.user.email
-        )
+        products = _private.get_product_from_cart(user_email=request.user.email)
         return Response(products)
 
 
@@ -23,19 +19,20 @@ class AddProductApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        product = _private.add_product_to_cart(
-            user_email=request.user.email,
-            product_id=kwargs["product_id"]
-        )
+        product = _private.add_product_to_cart(user_email=request.user.email, product_id=kwargs["product_id"])
         if product:
-            return Response(data={
-                "status": status.HTTP_201_CREATED,
-                "status_text": "Product added to cart",
-            })
-        return Response(data={
+            return Response(
+                data={
+                    "status": status.HTTP_201_CREATED,
+                    "status_text": "Product added to cart",
+                }
+            )
+        return Response(
+            data={
                 "status": status.HTTP_404_NOT_FOUND,
                 "status_text": "Product not found",
-            })
+            }
+        )
 
 
 class RemoveProductApi(views.APIView):
@@ -43,16 +40,17 @@ class RemoveProductApi(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
-        product = _private.remove_product_from_cart(
-            user_email=request.user.email,
-            product_id=kwargs["product_id"]
-        )
+        product = _private.remove_product_from_cart(user_email=request.user.email, product_id=kwargs["product_id"])
         if product:
-            return Response(data={
-                "status": status.HTTP_200_OK,
-                "status_text": "Product removed from cart",
-            })
-        return Response(data={
-            "status": status.HTTP_404_NOT_FOUND,
-            "status_text": "Product not found",
-        })
+            return Response(
+                data={
+                    "status": status.HTTP_200_OK,
+                    "status_text": "Product removed from cart",
+                }
+            )
+        return Response(
+            data={
+                "status": status.HTTP_404_NOT_FOUND,
+                "status_text": "Product not found",
+            }
+        )

@@ -1,12 +1,12 @@
-from django.db import models
-from django.contrib.auth import models as auth_models
 from django.conf import settings
+from django.contrib.auth import models as auth_models
+from django.db import models
 
 
 class User(auth_models.AbstractUser):
     email = models.EmailField(max_length=254, unique=True)
     username = None
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
 

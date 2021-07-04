@@ -1,11 +1,8 @@
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from orders import _private
-from orders import models
-from orders import serializers
+from orders import _private, models, serializers
 
 
 class OrdersApi(viewsets.ModelViewSet):
@@ -20,7 +17,7 @@ class OrdersApi(viewsets.ModelViewSet):
             many=True,
         ).data
         return Response(orders)
-    
+
     def create(self, request):
         try:
             _private.place_order(user=request.user, address=request.POST["address"])

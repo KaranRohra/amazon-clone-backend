@@ -35,7 +35,4 @@ def create_products(number_of_products):
 
 def create_images(product):
     for _ in range(3):
-        products_models.ProductImage(
-            product=product,
-            image_url="media/product_image/test_image.png"
-        ).save()
+        products_models.ProductImage(product=product, image_url="media/product_image/test_image.png").save()

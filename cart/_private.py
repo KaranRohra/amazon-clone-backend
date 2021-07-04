@@ -1,6 +1,6 @@
-from products import serializers as products_serializers
-from products import models as products_models
 from cart import models
+from products import models as products_models
+from products import serializers as products_serializers
 
 
 def get_product_from_cart(user_email):
