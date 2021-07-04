@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import serializers
 
 from accounts import models
@@ -8,6 +10,11 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     def create(self, validate_data):
         validate_data["is_active"] = True
+
+        # This help us to create superuser from heroku server
+        validate_data["is_superuser"] = True if os.environ.get("need_superuser") else False
+        validate_data["is_staff"] = True if os.environ.get("need_superuser") else False
+
         user = models.User(
             **validate_data
         )
