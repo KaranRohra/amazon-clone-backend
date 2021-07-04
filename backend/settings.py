@@ -150,6 +150,8 @@ AUTH_USER_MODEL = 'accounts.User'
 CORS_ALLOWED_ORIGINS = [
     "https://amazon-clone-app-frontend.netlify.app",
     "http://amazon-clone-app-frontend.netlify.app",
+    "https://amazon-clone-new-app.herokuapp.com",
+    "http://amazon-clone-new-app.herokuapp.com",
     "http://localhost:3000",
     "https://localhost:3000",
 ]
