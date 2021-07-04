@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
+import dj_database_url
 
 from pathlib import Path
 
@@ -20,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z!@8xvitr3imfo6yh(#i#+kww)-3&#5aa#6bme9e_hcy10(@xm'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = []
 
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,6 +91,10 @@ DATABASES = {
     }
 }
 
+if(not os.environ.get("DEBUG")):
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -127,7 +134,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = "/static/"
+STATIC_ROOT = BASE_DIR / 'static'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -139,6 +148,8 @@ AUTH_USER_MODEL = 'accounts.User'
 
 # Cors headers to know who can access backend api's
 CORS_ALLOWED_ORIGINS = [
+    "https://amazon-clone-app-frontend.netlify.app",
+    "http://amazon-clone-app-frontend.netlify.app",
     "http://localhost:3000",
     "https://localhost:3000",
 ]
