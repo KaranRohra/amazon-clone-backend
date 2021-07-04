@@ -12,8 +12,8 @@ pre-commit:
     prevent_bad_branch_name:
       files: git diff --name-only HEAD
       run: "python ./githooks/branch_name.py"
-    prevent_print_statement:
-      run: "bash ./githooks/print_statement.sh"
+    # prevent_print_statement:
+    #   run: "bash ./githooks/print_statement.sh"
     running_test:
       run: "python manage.py test"
     code-lint-and-formater:
