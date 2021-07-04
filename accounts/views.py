@@ -32,7 +32,7 @@ class GetUserApi(views.APIView):
         return Response(serializers.UserSerializer(request.user).data)
 
 
-class GetUserAddresApi(viewsets.ModelViewSet):
+class UserAddresApi(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.AddressSerializer

@@ -3,8 +3,6 @@ from django.contrib.auth import admin as auth_admin
 from accounts import models
 
 
-
-
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
     list_display = ("id", 'user','country', 'state', 'city')
@@ -13,7 +11,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(models.User)
 class UserAdmin(auth_admin.UserAdmin):
-    list_display = ('email', 'first_name', 'last_name')
+    list_display = ('id', 'email', 'first_name', 'last_name')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name')}),

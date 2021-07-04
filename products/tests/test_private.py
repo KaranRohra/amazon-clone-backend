@@ -13,5 +13,5 @@ class GetProductsTest(TestCase):
         products = helper.create_products(number_of_products=10)
         expected_response = products[:5]
 
-        response = _private.get_products()
+        # response = _private.get_products()
         # TODO
