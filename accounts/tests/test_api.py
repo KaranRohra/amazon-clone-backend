@@ -1,29 +1,20 @@
-from rest_framework.authtoken import models as authtoken_models
-from rest_framework import status
-
+from django.db import IntegrityError
 from django.test import TestCase
 from django.urls import reverse
-from django.db import IntegrityError
+from rest_framework import status
+from rest_framework.authtoken import models as authtoken_models
 
-from accounts import constants
-from accounts import models
-from accounts import serializers
+from accounts import constants, models, serializers
 from common.tests import helper
 
 
 class CrateUserAccountTest(TestCase):
     def setUp(self) -> None:
         self.url_path = reverse("accounts:register")
-        self.data = {
-            "email": constants.EMAIL,
-            "password": constants.PASSWORD
-        }
+        self.data = {"email": constants.EMAIL, "password": constants.PASSWORD}
 
     def test_create_user(self):
-        response = self.client.post(
-            path=self.url_path,
-            data=self.data
-        )
+        response = self.client.post(path=self.url_path, data=self.data)
 
         # If this doesn't raise exception then it indicates that our api is working
         user = models.User.objects.get(email=constants.EMAIL)
@@ -37,11 +28,10 @@ class CrateUserAccountTest(TestCase):
             password=constants.PASSWORD,
         )
         try:
-            response = self.client.post(
-                path=self.url_path,
-                data=self.data
+            response = self.client.post(path=self.url_path, data=self.data)
+            self.assertEqual(
+                status.HTTP_500_INTERNAL_SERVER_ERROR, response.status_code
             )
-            self.assertEqual(status.HTTP_500_INTERNAL_SERVER_ERROR, response.status_code)
         except IntegrityError:
             self.assertEqual(True, True)
         else:
@@ -53,9 +43,7 @@ class CrateUserAccountTest(TestCase):
             path=self.url_path,
             data=self.data,
         )
-        expected_response = {
-            "email": ["Enter a valid email address."]
-        }
+        expected_response = {"email": ["Enter a valid email address."]}
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
 
@@ -63,20 +51,14 @@ class CrateUserAccountTest(TestCase):
 class LoginTest(TestCase):
     def setUp(self) -> None:
         self.url_path = reverse("accounts:auth")
-        self.data = {
-            "username": constants.EMAIL,
-            "password": constants.PASSWORD
-        }
+        self.data = {"username": constants.EMAIL, "password": constants.PASSWORD}
 
     def test_login_with_valid_user(self):
         helper.create_user(
             email=constants.EMAIL,
             password=constants.PASSWORD,
         )
-        response = self.client.post(
-            path=self.url_path,
-            data=self.data
-        )
+        response = self.client.post(path=self.url_path, data=self.data)
 
         expected_response = {
             "token": authtoken_models.Token.objects.get(user__email=constants.EMAIL).key
@@ -86,10 +68,7 @@ class LoginTest(TestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
     def test_login_without_user(self):
-        response = self.client.post(
-            path=self.url_path,
-            data=self.data
-        )
+        response = self.client.post(path=self.url_path, data=self.data)
         expected_response = {
             "non_field_errors": ["Unable to log in with provided credentials."]
         }

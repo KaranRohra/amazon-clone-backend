@@ -4,5 +4,5 @@ CATEGORY_CHOICE = (
     ("Laptop", "Laptop"),
     ("Computer", "Computer"),
     ("Electronic", "Electronic"),
-    ("Other", "Other")
+    ("Other", "Other"),
 )

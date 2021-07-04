@@ -1,7 +1,6 @@
-from rest_framework import routers, urlpatterns
+from rest_framework import routers
 
 from orders import views
-
 
 router = routers.DefaultRouter()
 router.register("", views.OrdersApi)

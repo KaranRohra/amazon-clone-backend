@@ -6,21 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_address_name'),
+        ("accounts", "0003_address_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='address',
-            name='phone_number_1',
-            field=models.CharField(default='Not available', max_length=20, verbose_name='Phone number 1'),
+            model_name="address",
+            name="phone_number_1",
+            field=models.CharField(
+                default="Not available", max_length=20, verbose_name="Phone number 1"
+            ),
         ),
         migrations.AddField(
-            model_name='address',
-            name='phone_number_2',
-            field=models.CharField(blank=True, max_length=20, null=True, verbose_name='Phone number 2 (Optional)'),
+            model_name="address",
+            name="phone_number_2",
+            field=models.CharField(
+                blank=True,
+                max_length=20,
+                null=True,
+                verbose_name="Phone number 2 (Optional)",
+            ),
         ),
         migrations.DeleteModel(
-            name='Phone',
+            name="Phone",
         ),
     ]

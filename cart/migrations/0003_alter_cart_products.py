@@ -6,14 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('products', '0003_alter_product_description'),
-        ('cart', '0002_alter_cart_products'),
+        ("products", "0003_alter_product_description"),
+        ("cart", "0002_alter_cart_products"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='cart',
-            name='products',
-            field=models.ManyToManyField(blank=True, default=None, to='products.Product'),
+            model_name="cart",
+            name="products",
+            field=models.ManyToManyField(
+                blank=True, default=None, to="products.Product"
+            ),
         ),
     ]
