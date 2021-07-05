@@ -1,15 +1,6 @@
-from rest_framework.authtoken import models as authtoken_models
-
 from accounts import models as accounts_models
 from cart import models as cart_models
 from products import models as products_models
-
-
-def create_user(**user_info):
-    user = accounts_models.User(**user_info)
-    user.set_password(user_info["password"])
-    user.save()
-    return user
 
 
 def create_cart(user_obj, number_of_products):
@@ -38,10 +29,6 @@ def create_products(number_of_products):
 def create_images(product):
     for _ in range(3):
         products_models.ProductImage(product=product, image_url="media/product_image/test_image.png").save()
-
-
-def generate_token(user):
-    return authtoken_models.Token.objects.create(user=user)
 
 
 def create_address(user, number_of_address=1):

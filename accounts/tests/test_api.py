@@ -91,8 +91,7 @@ class GetUserApiTest(test.APITestCase):
         }
 
     def test_get_user_with_user(self):
-        token = common_helper.generate_token(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
         response = self.client.get(self.url_path)
         expected_response = {
             "id": self.user.id,
@@ -127,17 +126,12 @@ class UserAddressApiTestCase(test.APITestCase):
 
         self.client = test.APIClient()
         self.list_api_url = reverse("accounts:address-list")
-        self.user_info = {
-            "email": common_constants.EMAIL,
-            "password": common_constants.PASSWORD,
-        }
 
     def test_user_address_with_valid_user(self):
         address_list = common_helper.create_address(user=self.user_1, number_of_address=5)
         expected_response = serializers.AddressSerializer(address_list, many=True).data
 
-        token = common_helper.generate_token(user=self.user_1)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
         response = self.client.get(self.list_api_url)
 
         self.assertEqual(expected_response, response.json())
@@ -146,8 +140,7 @@ class UserAddressApiTestCase(test.APITestCase):
     def test_user_addess_without_address(self):
         expected_response = []
 
-        token = common_helper.generate_token(user=self.user_1)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
         response = self.client.get(self.list_api_url)
 
         self.assertEqual(expected_response, response.json())
@@ -174,8 +167,7 @@ class UserAddressApiTestCase(test.APITestCase):
         common_constants.ADDRESS["user"] = self.user_1.id
         common_constants.ADDRESS["id"] = 1  # Since we are creating only one address object so id is 1
 
-        token = common_helper.generate_token(user=self.user_1)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
         response = self.client.post(self.list_api_url, data=common_constants.ADDRESS)
 
         self.assertEqual(common_constants.ADDRESS, response.json())
