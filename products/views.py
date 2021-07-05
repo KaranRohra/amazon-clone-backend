@@ -1,6 +1,9 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics
+from rest_framework import viewsets
 
-from products import _private, models, serializers
+from products import _private
+from products import models
+from products import serializers
 
 
 class ProductsPageNumberApi(generics.ListAPIView):

@@ -1,8 +1,11 @@
-from rest_framework import permissions, viewsets
+from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from orders import _private, models, serializers
+from orders import _private
+from orders import models
+from orders import serializers
 
 
 class OrdersApi(viewsets.ModelViewSet):

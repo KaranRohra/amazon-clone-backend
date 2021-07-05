@@ -1,13 +1,17 @@
 from django.test import TestCase
 
-from accounts import models, public
-from common.tests import constants, helper
+from accounts import models
+from accounts import public
+from accounts.tests import helper
+from common.tests import helper as common_helper
 
 
 class GetAddressByPkTestCase(TestCase):
+    def setUp(self):
+        self.user_object = helper.User()
+
     def test_get_address_with_valid_pk(self):
-        user = helper.create_user(**constants.USER_INFO)
-        expected_address = helper.create_address(user=user)[0]
+        expected_address = common_helper.create_address(user=self.user_object.user_1)[0]
         response = public.get_address_by_pk(1)
         self.assertEqual(expected_address, response)
 

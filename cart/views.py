@@ -1,4 +1,6 @@
-from rest_framework import permissions, status, views
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import views
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 

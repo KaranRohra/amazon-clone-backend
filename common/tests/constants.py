@@ -9,6 +9,18 @@ LAST_NAME = "User"
 USER_INFO = {
     "email": EMAIL,
     "password": PASSWORD,
+    "first_name": FIRST_NAME,
+    "last_name": LAST_NAME,
+}
+
+USER_INVALID_INFO = {
+    **USER_INFO,
+    "email": INVALID_EMAIL_SYNTAX,
+}
+
+UNKNOWN_USER = {
+    "email": UNKNOWN_EMAIL,
+    "password": PASSWORD,
 }
 
 ADDRESS = {

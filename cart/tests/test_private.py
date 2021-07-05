@@ -1,7 +1,9 @@
 from django.test import TestCase
 
-from cart import _private, models
-from common.tests import constants, helper
+from cart import _private
+from cart import models
+from common.tests import constants
+from common.tests import helper
 from products import serializers
 
 

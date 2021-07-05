@@ -1,9 +1,14 @@
-from rest_framework import generics, permissions, status, views, viewsets
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import views
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken import models as authtoken_models
 from rest_framework.response import Response
 
-from accounts import models, serializers
+from accounts import models
+from accounts import serializers
 
 
 class RegisterApi(generics.CreateAPIView):
