@@ -6,8 +6,8 @@ from rest_framework.authtoken import models as authtoken_models
 
 from accounts import models
 from accounts import serializers
+from accounts.tests import constants as accounts_constants
 from accounts.tests import helper
-from common.tests import constants as common_constants
 
 
 class CrateUserAccountTest(test.APITestCase):
@@ -15,17 +15,17 @@ class CrateUserAccountTest(test.APITestCase):
         self.url_path = reverse("accounts:register")
 
     def test_create_user(self):
-        response = self.client.post(path=self.url_path, data=common_constants.USER_INFO)
+        response = self.client.post(path=self.url_path, data=accounts_constants.USER_INFO)
 
         # If this doesn't raise exception then it indicates that our api is working
-        user = models.User.objects.get(email=common_constants.EMAIL)
+        user = models.User.objects.get(email=accounts_constants.EMAIL)
         expected_response = serializers.UserSerializer(user).data
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
     def test_create_user_with_already_exist_user(self):
         helper.User()
-        response = self.client.post(path=self.url_path, data=common_constants.USER_INFO)
+        response = self.client.post(path=self.url_path, data=accounts_constants.USER_INFO)
         expected_response = {"email": ["user with this email already exists."]}
         self.assertEqual(status.HTTP_400_BAD_REQUEST, response.status_code)
         self.assertEqual(expected_response, response.json())
@@ -33,7 +33,7 @@ class CrateUserAccountTest(test.APITestCase):
     def test_create_user_with_invalid_email(self):
         response = self.client.post(
             path=self.url_path,
-            data=common_constants.USER_INVALID_INFO,
+            data=accounts_constants.USER_INVALID_INFO,
         )
         expected_response = {"email": ["Enter a valid email address."]}
         self.assertEqual(response.json(), expected_response)
@@ -43,8 +43,8 @@ class CrateUserAccountTest(test.APITestCase):
 class LoginTest(test.APITestCase):
     def setUp(self) -> None:
         self.user_info = {
-            "username": common_constants.EMAIL,
-            "password": common_constants.PASSWORD,
+            "username": accounts_constants.EMAIL,
+            "password": accounts_constants.PASSWORD,
         }
         self.user_object = helper.User()
         self.url_path = reverse("accounts:auth")
@@ -52,7 +52,7 @@ class LoginTest(test.APITestCase):
     def test_login_with_valid_user(self):
         response = self.client.post(path=self.url_path, data=self.user_info)
 
-        expected_response = {"token": authtoken_models.Token.objects.get(user__email=common_constants.EMAIL).key}
+        expected_response = {"token": authtoken_models.Token.objects.get(user__email=accounts_constants.EMAIL).key}
         self.assertEqual(self.client.login(**self.user_info), True)
         self.assertEqual(response.json(), expected_response)
         self.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -83,10 +83,10 @@ class GetUserApiTest(test.APITestCase):
         self.url_path = reverse("accounts:get-user")
         self.client = test.APIClient()
         self.user_info = {
-            "email": common_constants.EMAIL,
-            "password": common_constants.PASSWORD,
-            "first_name": common_constants.FIRST_NAME,
-            "last_name": common_constants.LAST_NAME,
+            "email": accounts_constants.EMAIL,
+            "password": accounts_constants.PASSWORD,
+            "first_name": accounts_constants.FIRST_NAME,
+            "last_name": accounts_constants.LAST_NAME,
         }
 
     def test_get_user_with_user(self):
@@ -94,9 +94,9 @@ class GetUserApiTest(test.APITestCase):
         response = self.client.get(self.url_path)
         expected_response = {
             "id": self.user.id,
-            "email": common_constants.EMAIL,
-            "first_name": common_constants.FIRST_NAME,
-            "last_name": common_constants.LAST_NAME,
+            "email": accounts_constants.EMAIL,
+            "first_name": accounts_constants.FIRST_NAME,
+            "last_name": accounts_constants.LAST_NAME,
             "is_active": True,
             "date_joined": str(timezone.localtime(self.user.date_joined)).replace(" ", "T"),
             "last_login": None,
@@ -163,14 +163,14 @@ class UserAddressApiTestCase(test.APITestCase):
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
     def test_user_address_save_address(self):
-        common_constants.ADDRESS["user"] = self.user_2.id
+        accounts_constants.ADDRESS["user"] = self.user_2.id
         # We are doing total count + 1, because if new address is added then count of address is increased by 1
-        common_constants.ADDRESS["id"] = models.Address.objects.count() + 1
+        accounts_constants.ADDRESS["id"] = models.Address.objects.count() + 1
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
-        response = self.client.post(self.list_api_url, data=common_constants.ADDRESS)
+        response = self.client.post(self.list_api_url, data=accounts_constants.ADDRESS)
 
-        self.assertEqual(common_constants.ADDRESS, response.json())
+        self.assertEqual(accounts_constants.ADDRESS, response.json())
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
 
 

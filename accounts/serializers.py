@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validate_data):
         validate_data["is_active"] = True
 
-        # This help us to create superuser from heroku server
+        # This help us to create superuser with the help of virtual env in local or in heroku "env variables"
         validate_data["is_superuser"] = bool(os.environ.get("need_superuser"))
         validate_data["is_staff"] = bool(os.environ.get("need_superuser"))
 
