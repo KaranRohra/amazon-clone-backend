@@ -8,7 +8,6 @@ from accounts import models
 from accounts import serializers
 from accounts.tests import helper
 from common.tests import constants as common_constants
-from common.tests import helper as common_helper
 
 
 class CrateUserAccountTest(test.APITestCase):
@@ -123,13 +122,13 @@ class UserAddressApiTestCase(test.APITestCase):
     def setUp(self):
         self.user_object = helper.User()
         self.user_1 = self.user_object.user_1
+        self.user_2 = self.user_object.user_2
 
         self.client = test.APIClient()
         self.list_api_url = reverse("accounts:address-list")
 
     def test_user_address_with_valid_user(self):
-        address_list = common_helper.create_address(user=self.user_1, number_of_address=5)
-        expected_response = serializers.AddressSerializer(address_list, many=True).data
+        expected_response = serializers.AddressSerializer(self.user_object.user_1_address, many=True).data
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
         response = self.client.get(self.list_api_url)
@@ -137,16 +136,16 @@ class UserAddressApiTestCase(test.APITestCase):
         self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-    def test_user_addess_without_address(self):
+    def test_user_address_without_address(self):
         expected_response = []
 
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
         response = self.client.get(self.list_api_url)
 
         self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-    def test_user_addess_without_token(self):
+    def test_user_address_without_token(self):
         expected_response = {"detail": "Authentication credentials were not provided."}
 
         response = self.client.get(self.list_api_url)
@@ -154,7 +153,7 @@ class UserAddressApiTestCase(test.APITestCase):
         self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
-    def test_user_addess_with_invalid_token(self):
+    def test_user_address_with_invalid_token(self):
         self.client.credentials(HTTP_AUTHORIZATION="Token InvalidToken")
         expected_response = {"detail": "Invalid token."}
 
@@ -164,11 +163,30 @@ class UserAddressApiTestCase(test.APITestCase):
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
     def test_user_address_save_address(self):
-        common_constants.ADDRESS["user"] = self.user_1.id
-        common_constants.ADDRESS["id"] = 1  # Since we are creating only one address object so id is 1
+        common_constants.ADDRESS["user"] = self.user_2.id
+        # We are doing total count + 1, because if new address is added then count of address is increased by 1
+        common_constants.ADDRESS["id"] = models.Address.objects.count() + 1
 
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
         response = self.client.post(self.list_api_url, data=common_constants.ADDRESS)
 
         self.assertEqual(common_constants.ADDRESS, response.json())
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
+
+class LogoutUserApi(test.APITestCase):
+    def setUp(self) -> None:
+        self.user_object = helper.User()
+        self.logout_url = reverse("accounts:logout")
+        self.client = test.APIClient()
+
+    def test_logout_user(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
+        response = self.client.get(self.logout_url)
+        expected_response = {"status": status.HTTP_200_OK, "status_text": "Logout success"}
+        self.assertEqual(expected_response, response.json())
+
+    def test_logout_without_token(self):
+        response = self.client.get(self.logout_url)
+        expected_response = {"detail": "Authentication credentials were not provided."}
+        self.assertEqual(expected_response, response.json())

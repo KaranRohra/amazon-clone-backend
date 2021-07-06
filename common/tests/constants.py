@@ -1,4 +1,5 @@
 EMAIL = "test@gmail.com"
+EMAIL_2 = "test2@gmail.com"
 UNKNOWN_EMAIL = "unknown@gmail.com"
 PASSWORD = "test_password"
 INVALID_EMAIL_SYNTAX = "@admin.coma@"
@@ -11,6 +12,11 @@ USER_INFO = {
     "password": PASSWORD,
     "first_name": FIRST_NAME,
     "last_name": LAST_NAME,
+}
+
+USER_INFO_2 = {
+    **USER_INFO,
+    "email": EMAIL_2,
 }
 
 USER_INVALID_INFO = {

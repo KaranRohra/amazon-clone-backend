@@ -32,12 +32,12 @@ class GetUserApi(views.APIView):
         return Response(serializers.UserSerializer(request.user).data)
 
 
-class UserAddresApi(viewsets.ModelViewSet):
+class UserAddressApi(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.AddressSerializer
     queryset = models.Address.objects.all()
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         user_address = serializers.AddressSerializer(models.Address.objects.filter(user=request.user), many=True).data
         return Response(user_address)

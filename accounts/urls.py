@@ -7,7 +7,7 @@ from accounts import views
 app_name = "accounts"
 
 router = routers.DefaultRouter()
-router.register("user/address", views.UserAddresApi, basename="address")
+router.register("user/address", views.UserAddressApi, basename="address")
 
 
 urlpatterns = [

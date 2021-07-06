@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-z!@8xvitr3imfo6yh(#i#+kww)-3&#5aa#6bme9e_hcy10(@xm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = ["localhost", "amazon-clone-bakend-api.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "amazon-clone-bakend-api.herokuapp.com"]
 
 
 # Application definition
