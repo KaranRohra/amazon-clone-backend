@@ -3,7 +3,7 @@ from django.db import models as db_models
 from products import models
 
 
-def get_products(page_number, search_by):
+def get_products(page_number, search_by=""):
     """
     :param page_number: contains page_number
     return the 5 product according to page_number
