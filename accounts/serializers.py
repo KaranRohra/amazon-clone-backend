@@ -28,9 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class AddressSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        return models.Address.objects.create(**validated_data)
+    is_address_deleted = serializers.BooleanField(default=False, write_only=True)
 
     class Meta:
         model = models.Address
+        read_only_fields = ("user",)
         fields = "__all__"

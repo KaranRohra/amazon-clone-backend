@@ -126,6 +126,8 @@ class UserAddressApiTestCase(test.APITestCase):
 
         self.client = test.APIClient()
         self.list_api_url = reverse("accounts:address-list")
+        self.address_id_1 = 1
+        self.address_detail_api_url = reverse("accounts:address-detail", kwargs={"pk": self.address_id_1})
 
     def test_user_address_with_valid_user(self):
         expected_response = serializers.AddressSerializer(self.user_object.user_1_address, many=True).data
@@ -163,15 +165,35 @@ class UserAddressApiTestCase(test.APITestCase):
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, response.status_code)
 
     def test_user_address_save_address(self):
-        accounts_constants.ADDRESS["user"] = self.user_2.id
         # We are doing total count + 1, because if new address is added then count of address is increased by 1
         accounts_constants.ADDRESS["id"] = models.Address.objects.count() + 1
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
         response = self.client.post(self.list_api_url, data=accounts_constants.ADDRESS)
 
-        self.assertEqual(accounts_constants.ADDRESS, response.json())
+        expected_response = {"Address save": "Success"}
+
+        self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+
+    def test_delete_user_address(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
+        response = self.client.delete(self.address_detail_api_url)
+
+        expected_response = {"Address delete": "Success"}
+
+        self.assertTrue(models.Address.objects.get(pk=self.address_id_1).is_address_deleted)
+        self.assertEqual(expected_response, response.json())
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+
+    def test_delete_user_address_which_is_not_belong_to_user(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
+        response = self.client.delete(self.address_detail_api_url)
+
+        expected_response = {"detail": "Not found."}
+
+        self.assertEqual(expected_response, response.json())
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
 
 
 class LogoutUserApi(test.APITestCase):

@@ -22,5 +22,15 @@ class Address(models.Model):
     phone_number_1 = models.CharField("Phone number 1", max_length=20, default="Not available")
     phone_number_2 = models.CharField("Phone number 2 (Optional)", max_length=20, null=True, blank=True)
 
+    """
+    This help us to identify the address is deleted by user or not
+    If the user delete the address we don't delete the address
+    instead we set is_address_deleted to True,
+    because if we delete the address it also delete the order which are related to address
+    """
+    is_address_deleted = models.BooleanField(
+        "To delete address check this box, don't click the delete button", default=False
+    )
+
     def __str__(self):
-        return f"{self.user} __ {self.country} __ {self.state}"
+        return f"{self.id} __ {self.user}"
