@@ -1,3 +1,4 @@
+from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework import views
@@ -5,15 +6,18 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
 from cart import _private
+from cart import models
+from products import serializers as products_serializers
 
 
-class GetProductFromCartApi(views.APIView):
+class GetProductFromCartApi(generics.ListAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = products_serializers.ProductSerializer
 
-    def get(self, request, *args, **kwargs):
-        products = _private.get_product_from_cart(user_email=request.user.email)
-        return Response(products)
+    def get_queryset(self, *args, **kwargs):
+        cart = models.Cart.objects.get(user=self.request.user)
+        return cart.products.all()
 
 
 class AddProductApi(views.APIView):

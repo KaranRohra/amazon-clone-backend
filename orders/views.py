@@ -14,12 +14,8 @@ class OrdersApi(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     queryset = models.Order.objects.all()
 
-    def list(self, request):
-        orders = serializers.OrderSerializer(
-            models.Order.objects.filter(user=request.user),
-            many=True,
-        ).data
-        return Response(orders)
+    def get_queryset(self, *args, **kwargs):
+        return models.Order.objects.filter(user=self.request.user)
 
     def create(self, request):
         try:

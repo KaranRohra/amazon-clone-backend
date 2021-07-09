@@ -16,7 +16,9 @@ __pycache__/
 
 */__pycache__/
 
+# Ignore IDE configuration folders
 .idea/
+.vscode/
 
 
 # Ignore media folder

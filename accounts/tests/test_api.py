@@ -171,7 +171,10 @@ class UserAddressApiTestCase(test.APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_2_token}")
         response = self.client.post(self.list_api_url, data=accounts_constants.ADDRESS)
 
-        expected_response = {"Address save": "Success"}
+        expected_response = {
+            "Address save": "Success",
+            "id": accounts_constants.ADDRESS["id"],
+        }
 
         self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
