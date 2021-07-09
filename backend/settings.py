@@ -159,7 +159,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
 
 
-if not DEBUG:  # This ensure that to store product_images on aws only on production
+if os.environ.get("AWS_ACCESS_KEY_ID"):  # This ensure that to store product_images on aws only on production
     # Serve media files using AWS S3 bucket
     AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
