@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-z!@8xvitr3imfo6yh(#i#+kww)-3&#5aa#6bme9e_hcy10(@xm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "amazon-clone-bakend-api.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "amazon-clone-backend.herokuapp.com"]
 
 
 # Application definition
@@ -148,8 +148,8 @@ AUTH_USER_MODEL = "accounts.User"
 
 # Cors headers to know who can access backend api's
 CORS_ALLOWED_ORIGINS = [
-    "https://amazon-clone-new-app.herokuapp.com",
-    "http://amazon-clone-new-app.herokuapp.com",
+    "https://amazon-clone-ecom.herokuapp.com",
+    "http://amazon-clone-ecom.herokuapp.com",
     "http://localhost:3000",
     "https://localhost:3000",
 ]
