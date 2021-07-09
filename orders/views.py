@@ -1,8 +1,11 @@
-from rest_framework import permissions, viewsets
+from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
-from orders import _private, models, serializers
+from orders import _private
+from orders import models
+from orders import serializers
 
 
 class OrdersApi(viewsets.ModelViewSet):
@@ -11,12 +14,8 @@ class OrdersApi(viewsets.ModelViewSet):
     serializer_class = serializers.OrderSerializer
     queryset = models.Order.objects.all()
 
-    def list(self, request):
-        orders = serializers.OrderSerializer(
-            models.Order.objects.filter(user=request.user),
-            many=True,
-        ).data
-        return Response(orders)
+    def get_queryset(self, *args, **kwargs):
+        return models.Order.objects.filter(user=self.request.user)
 
     def create(self, request):
         try:

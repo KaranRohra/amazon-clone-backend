@@ -1,9 +1,15 @@
-from rest_framework import generics, permissions, status, views, viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import status
+from rest_framework import views
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken import models as authtoken_models
 from rest_framework.response import Response
 
-from accounts import models, serializers
+from accounts import models
+from accounts import serializers
 
 
 class RegisterApi(generics.CreateAPIView):
@@ -27,12 +33,25 @@ class GetUserApi(views.APIView):
         return Response(serializers.UserSerializer(request.user).data)
 
 
-class GetUserAddresApi(viewsets.ModelViewSet):
+class UserAddressApi(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.AddressSerializer
     queryset = models.Address.objects.all()
 
-    def list(self, request):
-        user_address = serializers.AddressSerializer(models.Address.objects.filter(user=request.user), many=True).data
-        return Response(user_address)
+    def get_queryset(self, *args, **kwargs):
+        return models.Address.objects.filter(user=self.request.user, is_address_deleted=False)
+
+    def create(self, request, *args, **kwargs):
+        address = models.Address.objects.create(**request.POST.dict(), user=request.user)
+        context = {
+            "Address save": "Success",
+            "id": address.id,
+        }
+        return Response(context, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        address = get_object_or_404(models.Address, pk=kwargs["pk"], is_address_deleted=False, user=request.user)
+        address.is_address_deleted = True
+        address.save()
+        return Response({"Address delete": "Success"})

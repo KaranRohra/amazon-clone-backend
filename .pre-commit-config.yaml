@@ -1,3 +1,4 @@
+# REF https://codeburst.io/tool-your-django-project-pre-commit-hooks-e1799d84551f
 default_language_version:
   # default language version for each language
   python: python3.9
@@ -30,12 +31,7 @@ repos:
     hooks:
       - id: black
 
-  - repo: https://github.com/asottile/seed-isort-config
-    rev: v2.2.0
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v2.5.0
     hooks:
-      - id: seed-isort-config
-
-  - repo: https://github.com/pycqa/isort
-    rev: 5.9.1
-    hooks:
-      - id: isort
+      - id: reorder-python-imports

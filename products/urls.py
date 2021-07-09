@@ -13,4 +13,5 @@ urlpatterns = [
         views.ProductsPageNumberApi.as_view(),
         name="page-number",
     ),
+    path("count/", views.get_products_count, name="count"),
 ] + router.urls
