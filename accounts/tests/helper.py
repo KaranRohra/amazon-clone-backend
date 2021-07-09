@@ -14,6 +14,7 @@ class User:
         self.user_1 = self.create_user(accounts_constants.USER_INFO)
         self.user_2 = self.create_user(accounts_constants.USER_INFO_2)  # User 2 is without address
         self.user_3 = models.User.objects.create(email="test3@gmail.com", password="Password")  # User 3 is without cart
+        self.user_4 = models.User.objects.create(email="test4@gmail.com", password="Password")
 
     def create_user(self, user_info):
         user = models.User(**user_info)
@@ -33,14 +34,15 @@ class User:
         self.user_1_address = [  # Here we are creating three address for user_1
             models.Address.objects.create(
                 user=self.user_1,
-                country="Inida",
-                state="Maharashtra",
-                land_mark="Hira Ghat",
-                pincode=421003,
-                city="UNR",
-                address_line="Section 18",
-                phone_number_1="1234567890",
-                name=accounts_constants.FIRST_NAME,
+                **accounts_constants.ADDRESS,
+            )
+            for _ in range(3)
+        ]
+
+        self.user_4_address = [  # Here we are creating three address for user_1
+            models.Address.objects.create(
+                user=self.user_4,
+                **accounts_constants.ADDRESS,
             )
             for _ in range(3)
         ]

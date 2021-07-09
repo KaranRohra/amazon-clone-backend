@@ -178,6 +178,7 @@ class UserAddressApiTestCase(test.APITestCase):
 
         self.assertEqual(expected_response, response.json())
         self.assertEqual(status.HTTP_201_CREATED, response.status_code)
+        accounts_constants.ADDRESS.pop("id")
 
     def test_delete_user_address(self):
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.user_object.user_1_token}")
